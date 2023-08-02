@@ -18,17 +18,10 @@ def send_welcome(message):
 	print(stop_x)
 	bot.reply_to(message, "Привет! Я Мистер Парсер! Я ещё всему учусь, так что снисходительнее пожалуйста.")
 	time.sleep(1)
-	bot.send_message(message.chat.id,"p.s. Если кнопки управления не появляются, введите команду /button")
+	bot.send_message(message.chat.id,"p.s. Если кнопки управления не появляются, введите команду КОМАНДЫ")
 
 @bot.message_handler(content_types='text')
 def message_reply(message):
-    if message.text=="Команды" or "команды" or "Кнопки" or "кнопки":
-        markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
-        item1=types.KeyboardButton("Парсинг KazanExpress")
-        markup.add(item1)
-        item2=types.KeyboardButton("Остановить парсинг KazanExpress")
-        markup.add(item2)
-        bot.send_message(message.chat.id,'Выберите что вам надо',reply_markup=markup)
     def kazan():
         gc = pygsheets.authorize(
             service_account_file='C:\\Users\\f4lnn\Documents\MrParser\MrParser_Organs\pythonforgays-5b08b4475518.json')
@@ -49,7 +42,7 @@ def message_reply(message):
                 def Parsing(url):
                     driver = webdriver.ChromiumEdge()
                     driver.get(url)
-                    time.sleep(13)
+                    time.sleep(15)
                     amount = driver.find_element(By.CLASS_NAME, "available-amount").text
                     price = driver.find_element(By.CLASS_NAME, "currency").text
                     if amount=='Нет в наличии':
@@ -63,40 +56,66 @@ def message_reply(message):
                 worksheet.update_cell(counter, 4, value)
                 worksheet.update_cell(counter, 3, price)
                 counter=counter+1
-                try:
-                    values_list = worksheet.row_values(counter)
-                    url = values_list[0]
-                except:
-                    print('Начинаю сравнение...')
-                    for i in range (counter):
-                        x = worksheet.cell(counter, 4).value
-                        y = worksheet.cell(counter, 5).value
-                        try:
-                            if x > y:
+                x=worksheet.cell(counter,1).value
+                print(x)
+                if x == None :
+                     def srav(cot):
+                        print('Начинаю сравнение...')
+                        for i in range (cot-1):
+                            cot = cot - 1
+                            x = worksheet.cell(cot, 4).value
+                            y = worksheet.cell(cot, 5).value
+                            try:
+                                int(x)
+                            except:
+                                return
+                            try:
+                                x=int(x)
+                            except:
+                                x=0
+                            try:
+                                y=int(y)
+                            except:
+                                y=0
+                            print(x,y)
+                            #try:
+                            if x > y+10:
+                                y=str(y)
+                                x=str(x)
                                 text = (
-                                        "У конкурента пополнение товара!" +
-                                        "\nНазвание товара-" + worksheet.cell(counter, 2).value +
-                                        "\nИЗМЕНЕНИЕ" + y +"--->" + x
-                                    )
+                                                    "У конкурента пополнение товара!" +
+                                                    "\nНазвание товара-" + worksheet.cell(cot, 2).value +
+                                                    "\nПродавец- " + worksheet.cell(cot, 6).value +
+                                                    "\nИЗМЕНЕНИЕ "+ y +"--->" + x
+                                                )
                                 bot.send_message(message.chat.id, text)
-                            worksheet.update_cell(counter, 5, x)
-                        except:
-                            worksheet.update_cell(counter, 5, 0)
-                        counter=counter-1
-                    counter=2
-                    print('Новый цикл...')
-                time.sleep(900)
+
+                            #except:
+                                #print('Нулирую')
+                                worksheet.update_cell(cot, 5, x)
+                            worksheet.update_cell(cot, 5, x)
+                     srav(counter)
+                     counter=2
+                     print('Обнуление',counter)
+                #time.sleep(900)
     if message.text=="Остановить парсинг KazanExpress":
         bot.send_message(message.chat.id,"Прекращаю парсинг...")
         global stop_x
         stop_x = True
+        print('ОСТАНОВКА ПАРСИНГА ИЗВНЕ')
         return stop_x
-        print(stop_x)
     elif message.text=="Парсинг KazanExpress":
         bot.send_message(message.chat.id,"Начинаю парсинг")
         stop_x = False
         kazan()
         return stop_x
+    elif message.text=="Команды" or "команды" or "Кнопки" or "кнопки" or "КОМАНДЫ":
+        markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+        item1=types.KeyboardButton("Парсинг KazanExpress")
+        markup.add(item1)
+        item2=types.KeyboardButton("Остановить парсинг KazanExpress")
+        markup.add(item2)
+        bot.send_message(message.chat.id,'Выберите что вам надо',reply_markup=markup)
 @bot.message_handler(commands=['button'])
 def button_message(message):
     markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
