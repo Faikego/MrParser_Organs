@@ -19,7 +19,7 @@ worksheett = 'KazanExpress'
 #options.add_argument("--headless=new")
 service = Service(executable_path='C:\chromedriver\chromedriver.exe')
 options = webdriver.ChromeOptions()
-driver = webdriver.Chrome(service=service, options=options)
+driver = webdriver.Chrome(options=options)
 list_of_users = []
 def get_users():
     users = bot.get_updates()
@@ -37,7 +37,7 @@ def KazanExpress(url):
     file_name = mnus + '.json'
     global driver
     driver.get(url)
-    time.sleep(13)
+    time.sleep(20)
     sum_amount = driver.find_element(By.CLASS_NAME, "available-amount").text
     if sum_amount == 'Нет в наличии':
         sum_amount = 0
@@ -62,9 +62,11 @@ def KazanExpress(url):
         while InspectorMain==True:
                 counter=counter+1
                 name = str(counter) + 'amount'
+                color_name = str(counter) + 'color'
                 try:
                     list_y = comparison[name]
                     list_x = data[name]
+                    color_list = data[color_name]
                 except:
                     return text
                 i=0
@@ -73,13 +75,15 @@ def KazanExpress(url):
                     try:
                         y = list_y[i]
                         x = list_x[i]
+                        color = color_list[i]
                         all_amount=data['sum_amount']
                         z=int(x)-int(y)
-                        z=z-1
+                        z=z
                         i = i + 1
                         if int(x) > int(y) + 9:
                                 text.append('У конкурента изменение количества!' + str(y) + '-->' + str(x)+
-                                            '\n Изменение общего количества- '+str(all_amount) + '-->'+ str(all_amount+z))
+                                            '\n Изменение общего количества- '+str(all_amount-z) + '-->'+ str(all_amount)+
+                                            '\n Цвет-'+str(color))
                     except IndexError:
                         try:
                             InspectorSecond=False
@@ -87,17 +91,21 @@ def KazanExpress(url):
                             print('Проблемы в сравнении!')
                             return text
                 name = str(counter) + 'price'
+                color_name = str(counter) + 'color'
                 list_y = comparison[name]
                 list_x = data[name]
+                color_list = data [color_name]
                 InspectorSecond=True
                 i=0
                 while InspectorSecond==True:
                     try:
                         y = list_y[i]
                         x = list_x[i]
+                        color = color_list[i]
                         i = i + 1
                         if int(x) != int(y):
-                                text.append('У конкурента изменение цены!' + str(y) + '-->' + str(x))
+                                text.append('У конкурента изменение цены!' + str(y) + '-->' + str(x)+
+                                            '\nЦвет-'+str(color))
                     except IndexError:
                         try:
                             #print('Конец индекса!'+str(i))
@@ -230,8 +238,8 @@ def KazanExpress(url):
         try:
             with open(file_name) as read_file:
                 comparison = json.load(read_file)
-                # print(comparison)
-                # print(data)
+                print(comparison)
+                print(data)
                 try:
                     comparison = ast.literal_eval(comparison)
                 except ValueError:
@@ -259,8 +267,8 @@ def KazanExpress(url):
             try:
                 with open(file_name) as read_file:
                     comparison = json.load(read_file)
-                    # print(comparison)
-                    # print(data)
+                    print(comparison)
+                    print(data)
                     try:
                         comparison = ast.literal_eval(comparison)
                     except ValueError:
@@ -302,8 +310,8 @@ def KazanExpress(url):
                 try:
                     with open(file_name) as read_file:
                         comparison = json.load(read_file)
-                        # print(comparison)
-                        # print(data)
+                        print(comparison)
+                        print(data)
                         try:
                             comparison = ast.literal_eval(comparison)
                         except ValueError:
@@ -429,23 +437,22 @@ def message_reply(message):
                                         "Уведомление!" +
                                         "\nНАЗВАНИЕ ТОВАРА-" + str(worksheet.cell(counter, 2).value) +
                                         "\nПРОДАВЕЦ- " + str(worksheet.cell(counter, 3).value) +
-                                         '\nЦвет- '+str(color) +
                                         "\nУВЕДОМЛЕНИЕ- " + Notification
                                 )
                                 bot.send_message(User, Notification_text)
-                all_times = pendulum.now()
-                all_times_hour = all_times.hour+4
-                update_time= str(all_times_hour) + ':' + str(all_times.minute)
+                all_times =pendulum.now(tz='Europe/Samara')
+                update_time= str(all_times.format('HH:mm:ss'))
                 worksheet.update_cell(counter,6,update_time)
                 worksheet.update_cell(counter, 5, sum_amount)
                 worksheet.update_cell(counter, 4, avg_price)
+                print(update_time)
                 counter=counter+1
                 worksheet_Inspector=worksheet.cell(counter,1).value
                 print(worksheet_Inspector)
                 if worksheet_Inspector == None :
                      counter=2
                      print('Обнуление',counter)
-                #time.sleep(900)
+                time.sleep(111)
     if message.text=="Остановить парсинг KazanExpress":
         bot.send_message(message.chat.id,"Прекращаю парсинг...")
         global stop_x
