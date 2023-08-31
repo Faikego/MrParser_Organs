@@ -1,3 +1,4 @@
+import statistics
 import telebot
 from telebot import types
 import pygsheets
@@ -126,6 +127,7 @@ def KazanExpress(url):
                 counter = str(counter)
                 amogus = driver.find_element(By.XPATH,'//*[@id="product-info"]/div[2]/div[2]/div[2]/div[2]/div/div[' + counter + ']')
                 levels=2
+                print(levels)
                 amogus.click()
                 time.sleep(0.4)
                 #Поиск нужной информации
@@ -150,7 +152,11 @@ def KazanExpress(url):
                         amount = 1
                 amount_list.append(amount)
                 minmx = len(price) - 1
-                price = int(price[:minmx])
+                try:
+                    price = int(price[:minmx])
+                except ValueError:
+                    price = price.replace(',', '.')
+                    price = float(price[:minmx - 1])
                 price_list.append(price)
                 color_list.append(color)
             except selenium.common.exceptions.ElementClickInterceptedException:
@@ -163,6 +169,7 @@ def KazanExpress(url):
                 try:
                     amogus = driver.find_element(By.XPATH,'//*[@id="product-info"]/div[2]/div[2]/div/div[2]/div/div[' + counter + ']')
                     levels = 1
+                    print(levels)
                     amogus.click()
                     time.sleep(0.4)
                     amount = driver.find_element(By.CLASS_NAME, "available-amount").text
@@ -192,7 +199,11 @@ def KazanExpress(url):
                             amount = 1
                     amount_list.append(amount)
                     minmx = len(price) - 1
-                    price = int(price[:minmx])
+                    try:
+                        price = int(price[:minmx])
+                    except ValueError:
+                        price = price.replace(',', '.')
+                        price = float(price[:minmx - 1])
                     price_list.append(price)
                     color_list.append(color)
                 except selenium.common.exceptions.ElementClickInterceptedException:
@@ -203,8 +214,8 @@ def KazanExpress(url):
                     counter = str(counter)
                 except:
                     return amount_list,price_list,levels,color_list
-            except:
-                 return amount_list,price_list,levels,color_list
+            #except:
+            #     return amount_list,price_list,levels,color_list
     amount_list, price_list,levels,color_list = scan()
     # print('Количество настроек-',levels)
     if levels == 0:
@@ -233,7 +244,12 @@ def KazanExpress(url):
                 amount = 1
         amount_list.append(amount)
         minmx = len(price) - 1
-        price_list.append(int(price[:minmx]))
+        try:
+            price = int(price[:minmx])
+        except ValueError:
+            price = price.replace(',', '.')
+            price = float(price[:minmx - 1])
+        price_list.append(price)
         data = {"1amount": amount_list, "1price": price_list,'sum_amount':sum_amount}
         try:
             with open(file_name) as read_file:
@@ -283,11 +299,17 @@ def KazanExpress(url):
                 with open(file_name, "w") as write_file:
                     json.dump(data, write_file)
                     text='Новый товар в парсинге!'
-                    avg_price=mean(price_list)
+                    try:
+                        avg_price=mean(price_list)
+                    except:
+                        avg_price=0
                     return text,avg_price,sum_amount,color_list
             with open(file_name, "w") as write_file:
                 json.dump(data, write_file)
-            avg_price=mean(price_list)
+            try:
+                avg_price=mean(price_list)
+            except:
+                avg_price=0
             return text,avg_price,sum_amount,color_list
     elif levels == 2:
         data={}
@@ -314,7 +336,7 @@ def KazanExpress(url):
                         print(data)
                         try:
                             comparison = ast.literal_eval(comparison)
-                        except ValueError:
+                        except:
                             False
                         try:
                             text = comp(comparison, data)
@@ -339,6 +361,7 @@ def KazanExpress(url):
             name2=str(scounter)+"price"
             name3=str(scounter)+"color"
             if int(scounter)==1:
+                #print(price_list)
                 avg_price=mean(price_list)
             else:
                 price_list.append(avg_price)
