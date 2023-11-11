@@ -13,7 +13,7 @@ import ast
 from statistics import mean
 import pendulum
 #Вводные данные
-bot = telebot.TeleBot("6394171812:AAFcJORzBVOjb9Fwn1_wsYpjvJyQGSTFeHk")
+bot = telebot.TeleBot("")
 stop_x=False
 worksheett = 'KazanExpress'
 #options = Options()
