@@ -5,15 +5,16 @@ MrParser
 Контакты для связи: f4llno@yandex.com
 
 Содержание проекта
-Основной файл - mrbot.py
+
+Основной файл - mrbot.py 
+
 Файл запуска - main.py
 
 Requirements
+
 Устанавливать из requirements.txt:
 
 selenium
-
-chromedriver-py==90.0.4430.24
 
 requests
 
