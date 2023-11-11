@@ -12,23 +12,40 @@ Requirements
 Устанавливать из requirements.txt:
 
 selenium
+
 chromedriver-py==90.0.4430.24
+
 requests
+
 telebot
+
 Pillow
+
 telebot
+
 pygsheets
+
 gspread
+
 json
+
 ast
+
 statistics
+
 pendulum
 
 Запуск
+
 Запуск через терминал:
+
 Клонировать и открыть проект.
+
 git clone https://github.com/Faikego/MrParser_Organs.git
+
 cd MrParser_Organs
+
 Установить модули из requirements.txt.
 pip install -r requirements.txt 
+
 Запуск через PyCharm
