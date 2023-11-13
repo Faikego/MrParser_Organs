@@ -392,7 +392,7 @@ def Podpiska(message):
 
 @bot.message_handler(commands=['DOOM'])
 def DOOM_MESSAGE(message):
-    bot.send_message(message.chat.id,"Таки происходит уведомление всех")
+    bot.send_message(message.chat.id,"Происходит уведомление всех")
     for i in open('User_Id.txt','r').readlines():
         bot.send_message(i,'Тестирование рассылки, возможно вы первый и последний кто её видит')
 
