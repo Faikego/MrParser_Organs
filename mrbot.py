@@ -399,7 +399,7 @@ def DOOM_MESSAGE(message):
 @bot.message_handler(commands=['Mailing','mailing','MAILING'])
 def mailing(message):
     GC = gspread.service_account(
-        filename='C:\Program Files\pythonforgays-5b08b4475518.json')
+        filename='.json')
     counter = 1
     bot.send_message(message.chat.id, 'Начинаю сбор данных!')
     while True:
@@ -424,9 +424,9 @@ def mailing(message):
 def message_reply(message):
     def kazan():
         gc = pygsheets.authorize(
-            service_account_file='C:\Program Files\pythonforgays-5b08b4475518.json')
+            service_account_file='C:.json')
         GC = gspread.service_account(
-            filename='C:\Program Files\pythonforgays-5b08b4475518.json')
+            filename='.json')
         counter = 2
         worksheett = 'KazanExpress'
         SH = GC.open(worksheett)
