@@ -9,34 +9,18 @@
 
 Основной файл - mrbot.py 
 
-Файл запуска - main.py
-
 # Requirements
 
 Устанавливать из requirements.txt:
 
 ```
-selenium
+gspread==5.10.0
+pendulum==2.1.2
+pygsheets==2.0.6
+pyTelegramBotAPI==4.12.0
+requests==2.31.0
+selenium==4.11.0
 
-requests
-
-telebot
-
-Pillow
-
-telebot
-
-pygsheets
-
-gspread
-
-json
-
-ast
-
-statistics
-
-pendulum
 ```
 
 # Запуск
